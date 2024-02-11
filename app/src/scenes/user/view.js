@@ -57,13 +57,7 @@ const Detail = ({ user }) => {
             <div className="flex justify-between flex-wrap mt-4">
               <div className="w-full md:w-[260px] mt-[10px] md:mt-0 ">
                 <div className="text-[14px] text-[#212325] font-medium	">Name</div>
-                <input
-                  className="projectsInput text-[14px] font-normal text-[#212325] bg-[#F9FBFD] rounded-[10px]"
-                  name="name"
-                  disabled
-                  value={values.name}
-                  onChange={handleChange}
-                />
+                <input className="projectsInput text-[14px] font-normal text-[#212325] bg-[#F9FBFD] rounded-[10px]" name="name" value={values.name} onChange={handleChange} />
               </div>
               <div className="w-full md:w-[260px] mt-[10px] md:mt-0">
                 <div className="text-[14px] text-[#212325] font-medium	">Email</div>
