@@ -4,7 +4,7 @@ const { indexLogger } = require("../utils/indexLogger");
 const MODELNAME = "project";
 
 const Schema = new mongoose.Schema({
-  name: { type: String, unique: true },
+  name: { type: String, unique: true, required: true },
   description: { type: String },
   website: { type: String },
 
