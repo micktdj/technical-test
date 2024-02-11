@@ -17,13 +17,14 @@ ChartJS.register(...registerables);
 
 export default function ProjectView() {
   const [project, setProject] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = React.useState(false);
   const { id } = useParams();
   const history = useHistory();
 
   useEffect(() => {
     (async () => {
-      const { data: u } = await api.get(`/project/${id}`);
+      const { data: u } = await api.get(`/project/${id}`).finally(() => setIsLoading(false));
       setProject(u);
     })();
   }, []);
@@ -34,7 +35,7 @@ export default function ProjectView() {
     }
   }, [copied]);
 
-  if (!project) return <Loader />;
+  if (isLoading) return <Loader />;
 
   return (
     <React.Fragment>
@@ -45,14 +46,24 @@ export default function ProjectView() {
               <span className="text-[18px] text-[#212325] font-semibold">Project details</span>
             </div>
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => history.push(`/project/edit/${project?._id}`)}
-                className="border !border-[#0560FD] text-[#0560FD] py-[7px] px-[20px] bg-[#FFFFFF] rounded-[16px]">
-                Edit
-              </button>
+              {project && (
+                <button
+                  onClick={() => history.push(`/project/edit/${project?._id}`)}
+                  className="border !border-[#0560FD] text-[#0560FD] py-[7px] px-[20px] bg-[#FFFFFF] rounded-[16px]">
+                  Edit
+                </button>
+              )}
             </div>
           </div>
-          <ProjectDetails project={project} />
+          {project ? (
+            <ProjectDetails project={project} />
+          ) : (
+            <div className="flex flex-wrap p-3">
+              <div className="w-full ">
+                <p>Ce projet n&apos;existe pas</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </React.Fragment>
