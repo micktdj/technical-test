@@ -27,11 +27,13 @@ const Schema = new mongoose.Schema({
   description: { type: String },
   job_title: { type: String },
 
-  organisation: { type: String, trim: true, unique: true },
+  organisation: { type: String, trim: true, required: true },
   status: { type: String, default: "active" },
   availability: { type: String, default: "available" },
   address: { type: String },
 });
+
+Schema.index({ name: 1, organisation: 1 }, { unique: true });
 
 Schema.pre("save", function (next) {
   if (this.isModified("password") || this.isNew) {
