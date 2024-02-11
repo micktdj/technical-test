@@ -1,12 +1,18 @@
-const ENVIRONMENT = getEnvironment();
-const MONGO_URL =
-  "mongodb://ub26fnchwxfinjn0jpua:iwXlR0TMGAQU7XzeByFS@n1-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017,n2-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017/bzourapknoo1r3d?replicaSet=rs0";
+require("dotenv").config(); // Load .env file into process.env
+const { str, url, port } = require("envalid");
 
-const PORT = process.env.PORT || 8080;
-const secret = process.env.SECRET || "not-so-secret";
-const APP_URL = process.env.APP_URL || "http://localhost:8082";
+// Define validation schema for environment variables
+const env = require("envalid").cleanEnv(process.env, {
+  ENVIRONMENT: str({ default: "development", choices: ["development", "test", "production", "staging"] }),
+  MONGO_URL: url({ default: "mongodb://localhost:27017/api" }),
+  PORT: port({ default: "8080" }),
+  secret: str({ default: "not-so-secret" }),
+  APP_URL: url({ default: "http://localhost:8082" }),
+  GITHUB_TOKEN: str({ default: null }),
+});
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+// Extract validated environment variables
+const { ENVIRONMENT, MONGO_URL, PORT, secret, APP_URL, GITHUB_TOKEN } = env;
 
 module.exports = {
   PORT,
@@ -16,7 +22,3 @@ module.exports = {
   ENVIRONMENT,
   GITHUB_TOKEN,
 };
-
-function getEnvironment() {
-  return process.env.ENVIRONMENT || "development";
-}
