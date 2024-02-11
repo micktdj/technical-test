@@ -36,14 +36,21 @@ const Schema = new mongoose.Schema({
 Schema.index({ name: 1, organisation: 1 }, { unique: true });
 
 Schema.pre("save", function (next) {
-  if (this.isModified("password") || this.isNew) {
-    bcrypt.hash(this.password, 10, (e, hash) => {
-      this.password = hash;
-      return next();
-    });
-  } else {
-    return next();
+  if (this.isModified("name") || this.isNew) {
+    this.name = this.name.toLowerCase().trim();
   }
+
+  if (this.isModified("organisation") || this.isNew) {
+    this.organisation = this.organisation.toLowerCase().trim();
+  }
+
+  if (this.isModified("password") || this.isNew) {
+    const SALT_ROUND = 10;
+
+    this.password = bcrypt.hashSync(this.password, SALT_ROUND);
+  }
+
+  return next();
 });
 
 Schema.methods.comparePassword = function (p) {
