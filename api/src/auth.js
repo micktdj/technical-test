@@ -61,14 +61,15 @@ class Auth {
     try {
       const { password, username, organisation } = req.body;
 
-      if (password && !validatePassword(password)) return res.status(200).send({ ok: false, user: null, code: PASSWORD_NOT_VALIDATED });
+      if (typeof password !== "string" || !validatePassword(password))
+        return res.status(400).send({ ok: false, user: null, code: PASSWORD_NOT_VALIDATED });
 
-      const user = await this.model.create({ name: username, organisation, password });
+      const { _doc: user } = await this.model.create({ name: username, organisation, password });
       const token = jwt.sign({ _id: user._id }, config.secret, { expiresIn: JWT_MAX_AGE });
       const opts = { maxAge: COOKIE_MAX_AGE, secure: config.ENVIRONMENT === "development" ? false : true, httpOnly: false };
       res.cookie("jwt", token, opts);
 
-      return res.status(200).send({ user, token, ok: true });
+      return res.status(200).send({ user: { ...user, password: null }, token, ok: true });
     } catch (error) {
       console.log("e", error);
       if (error.code === 11000) return res.status(409).send({ ok: false, code: USER_ALREADY_REGISTERED });
