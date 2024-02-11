@@ -141,6 +141,9 @@ const Create = ({ onChangeSearch, setProjects }) => {
               initialValues={{}}
               onSubmit={async (values, { setSubmitting }) => {
                 try {
+                  if (!values.name) {
+                    throw new Error("Invalid name");
+                  }
                   values.status = "active";
                   const res = await api.post("/project", values);
                   if (!res.ok) throw res;
