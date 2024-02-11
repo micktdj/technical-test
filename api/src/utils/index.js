@@ -1,7 +1,10 @@
 const passwordValidator = require("password-validator");
-const AWS = require("aws-sdk");
 
 function validatePassword(password) {
+  if (typeof password !== "string") {
+    return false;
+  }
+
   const schema = new passwordValidator();
   schema
     .is()
