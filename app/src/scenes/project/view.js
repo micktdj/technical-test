@@ -2,6 +2,8 @@ import { Chart as ChartJS, registerables } from "chart.js";
 import React, { useEffect, useState } from "react";
 import { IoIosAt, IoIosLink } from "react-icons/io";
 import { useHistory, useParams } from "react-router-dom";
+import html2canvas from "html2canvas";
+import jspdf from "jspdf";
 
 import { getDaysInMonth } from "./utils";
 
@@ -19,6 +21,24 @@ export default function ProjectView() {
   const [copied, setCopied] = React.useState(false);
   const { id } = useParams();
   const history = useHistory();
+
+  const captureAndDownloadPDF = () => {
+    if (project) {
+      const divToCapture = document.getElementById("projectDetails");
+      const projectName = project?.name || "project";
+      const filename = `${projectName}_report.pdf`;
+
+      html2canvas(divToCapture).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jspdf("p", "mm", "a4");
+        const imgWidth = pdf.internal.pageSize.getWidth();
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+        pdf.save(filename);
+      });
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -45,16 +65,21 @@ export default function ProjectView() {
             </div>
             <div className="flex items-center gap-2">
               {project && (
-                <button
-                  onClick={() => history.push(`/project/edit/${project?._id}`)}
-                  className="border !border-[#0560FD] text-[#0560FD] py-[7px] px-[20px] bg-[#FFFFFF] rounded-[16px]">
-                  Edit
-                </button>
+                <>
+                  <button onClick={captureAndDownloadPDF} className="border !border-[#ff0000] text-[#ff0000] py-[7px] px-[20px] bg-[#FFFFFF] rounded-[16px]">
+                    Save As PDF
+                  </button>
+                  <button
+                    onClick={() => history.push(`/project/edit/${project?._id}`)}
+                    className="border !border-[#0560FD] text-[#0560FD] py-[7px] px-[20px] bg-[#FFFFFF] rounded-[16px]">
+                    Edit
+                  </button>
+                </>
               )}
             </div>
           </div>
           {project ? (
-            <ProjectDetails project={project} />
+            <ProjectDetails project={project} captureAndDownloadPDF={captureAndDownloadPDF} />
           ) : (
             <div className="flex flex-wrap p-3">
               <div className="w-full ">
@@ -71,7 +96,7 @@ export default function ProjectView() {
 const ProjectDetails = ({ project }) => {
   console.log(project);
   return (
-    <div>
+    <div id="projectDetails">
       <div className="flex flex-wrap p-3">
         <div className="w-full ">
           <div className="flex gap-3">
