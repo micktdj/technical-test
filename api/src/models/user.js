@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const { Date } = require("mongoose");
+const { indexLogger } = require("../utils/indexLogger");
 
 const MODELNAME = "user";
 
@@ -47,4 +48,7 @@ Schema.methods.comparePassword = function (p) {
   return bcrypt.compare(p, this.password || "");
 };
 const OBJ = mongoose.model(MODELNAME, Schema);
+
+OBJ.on("index", indexLogger(MODELNAME));
+
 module.exports = OBJ;

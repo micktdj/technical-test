@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { indexLogger } = require("../utils/indexLogger");
 
 const MODELNAME = "activity";
 
@@ -20,4 +21,7 @@ const Schema = new mongoose.Schema({
 });
 
 const OBJ = mongoose.model(MODELNAME, Schema);
+
+OBJ.on("index", indexLogger(MODELNAME));
+
 module.exports = OBJ;
