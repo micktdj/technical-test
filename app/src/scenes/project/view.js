@@ -1,8 +1,6 @@
 import { Chart as ChartJS, registerables } from "chart.js";
 import React, { useEffect, useState } from "react";
-import { IoIosAt, IoIosLink, IoIosStats, IoLogoGithub } from "react-icons/io";
-import { RiRoadMapLine } from "react-icons/ri";
-import { useSelector } from "react-redux";
+import { IoIosAt, IoIosLink } from "react-icons/io";
 import { useHistory, useParams } from "react-router-dom";
 
 import { getDaysInMonth } from "./utils";
