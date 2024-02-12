@@ -110,6 +110,10 @@ Utilizing the `Atomic Design pattern` for React components and integrating `Stor
 
 Enhancing backend stability involves tightening up schemas/models and implementing stricter validation, especially for incoming requests. By adopting more rigorous schemas/models and using Yup validation in controller inputs, we can better control and validate incoming `req.body` data, reducing errors and ensuring data integrity.
 
+#### Improving Codebase with Unit/Integrations/E2E tests
+
+Improving Frontend/Backend stability with Unit/Integration/E2E tests with framework like Jest/Supertest/Cypress...
+
 #### Enhancing User Experience with Improved Error Feedback
 
 One area requiring attention is the lack of sufficient feedback to users in case of errors on the frontend. Implementing a more robust UX feedback system is essential to ensure users understand errors, especially in form submissions.
